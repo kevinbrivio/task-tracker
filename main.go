@@ -63,6 +63,16 @@ func main() {
 				break
 			}
 			fmt.Printf("Task added successfully (ID: %d)\n", id)
+
+		case "list":
+			// empty description means list all tasks
+			if description == "" {
+				fmt.Println("============================")
+				for _, t := range taskList.Tasks {
+					fmt.Printf("[%d]. %s\n", t.ID, t.Description)
+				}
+				fmt.Println("============================")
+			}
 		}
 	}
 }

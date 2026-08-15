@@ -15,7 +15,7 @@ const (
 )
 
 type Task struct {
-	ID          string    `json:"id"`
+	ID          int       `json:"id"`
 	Description string    `json:"description"`
 	Status      Status    `json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -26,18 +26,23 @@ type TaskList struct {
 	Tasks []Task
 }
 
-func (tl *TaskList) addTask(description string) (int, error) {	
-	id := fmt.Sprintf("%d", len(tl.Tasks) + 1)
+func (tl *TaskList) addTask(description string) (int, error) {
+	num := fmt.Sprintf("%d", len(tl.Tasks)+1)
+	id, err := strconv.Atoi(num)
+	if err != nil {
+		fmt.Println("Cannot convert ID: ", err)
+		return -1, err
+	}
 
 	newTask := Task{
-		ID: id,
+		ID:          id,
 		Description: description,
-		Status: StatusTodo,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Status:      StatusTodo,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 
 	tl.Tasks = append(tl.Tasks, newTask)
 
-	return strconv.Atoi(id)
+	return id, nil
 }
