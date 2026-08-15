@@ -110,12 +110,26 @@ func main() {
 
 			targetID := parts[1]
 
-			description := parts[2]
+			description = parts[2]
 			if err := taskList.UpdateTask(targetID, description); err != nil {
 				fmt.Println(err)
 				continue
 			}
 			fmt.Printf("Task with ID: %s successfully updated\n", targetID)
+
+		case "delete":
+			targetID := description
+			if (targetID == "") {
+				fmt.Println("Please provide task ID")
+				continue
+			}
+			
+			if err := taskList.DeleteTask(targetID); err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Printf("Task with ID: %s successfully deleted\n", targetID)
+
 		}
 	}
 }

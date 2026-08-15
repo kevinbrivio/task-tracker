@@ -132,3 +132,20 @@ func (tl *TaskList) UpdateTask(ID string, description string) (error) {
 
 	return nil
 }
+
+// DeleteTask will delete task permanently
+func (tl *TaskList) DeleteTask(ID string) (error) {
+	targetID, err := strconv.Atoi(ID)
+	if err != nil {
+		return fmt.Errorf("wrong id")
+	}
+	
+	for i, task := range tl.Tasks {
+		if task.ID == targetID {
+			tl.Tasks = append(tl.Tasks[:i], tl.Tasks[i+1:]...)
+		}
+	}
+
+	return nil
+}
+
