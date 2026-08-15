@@ -114,3 +114,21 @@ func (tl *TaskList) MarkTask(ID string, status string) (error) {
 
 	return nil
 }
+
+// UpdateTask only updates the description and updated_at
+func (tl *TaskList) UpdateTask(ID string, description string) (error) {
+	targetID, err := strconv.Atoi(ID)
+	if err != nil {
+		return fmt.Errorf("wrong id")
+	}
+
+	task, err := tl.GetTaskByID(targetID)
+	if err != nil {
+		return err
+	}
+
+	task.Description = description
+	task.UpdatedAt = time.Now()
+
+	return nil
+}

@@ -42,7 +42,7 @@ func main() {
 		if line == "exit" {
 			break
 		}
-		parts := strings.SplitN(line, " ", 2)
+		parts := strings.SplitN(line, " ", 3)
 		command := parts[0]
 		description := ""
 
@@ -101,6 +101,21 @@ func main() {
 				continue
 			}
 			fmt.Printf("Task with ID: %s successfully marked to done\n", targetID)
+
+		case "update":
+			if len(parts) < 3 {
+				fmt.Println("Use this format: update [id] [task]")
+				continue
+			}
+
+			targetID := parts[1]
+
+			description := parts[2]
+			if err := taskList.UpdateTask(targetID, description); err != nil {
+				fmt.Println(err)
+				continue
+			}
+			fmt.Printf("Task with ID: %s successfully updated\n", targetID)
 		}
 	}
 }
