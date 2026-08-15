@@ -1,38 +1,55 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"os/signal"
+	"strings"
+	"syscall"
 )
 
 func main() {
-	sigs := make(chan os.Signal, 1)
-	msg := make(chan string, 1)
-	go func () {
-		// Receive input in a loop
-		for {
-			var s string
-			fmt.Print("task-cli ")
-			fmt.Scan(&s)
-			msg <- s
-		}
+	// read the line from runtime
+	reader := bufio.NewReader(os.Stdin)
+	
+	// Listen for every time control+c was typed
+	sigChan := make(chan os.Signal, 1)
+	
+	// If the OS sends SIGINT (ctrl+C) or SIGTERM
+	// We might need to drop it into sigChan instead of killing the program
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	go func ()  {
+		<-sigChan
+		fmt.Println("\ntask-cli is abandoned, goodbye...")
+		os.Exit(0)
 	}()
 
-	loop:
 	for {
-		select {
-		case <-sigs:
-		fmt.Println("Program shutdown, byebye...")
-		break loop
+		fmt.Print("task-cli ")
 
-		case s := <-msg:
-			switch {
-			case s == "add":
-				fmt.Println("Task added successfully (ID: )", msg, s)
-			}	
+		line, _ := reader.ReadString('\n') // Read until we got newline a.k.a enter
+		line = strings.TrimSpace(line)
 
+		if line == "" {
+			continue
 		}
+		if line == "exit" {
+			break
+		}
+
+		parts := strings.SplitN(line, " ", 2)
+		command := parts[0]
+		description := ""
+
+		if len(parts) > 1 {
+			description = parts[1]
+		}
+
+		fmt.Println("command: ", command)
+		fmt.Println("description: ", description)
 	}
-	
 }
+
 
