@@ -27,6 +27,7 @@ type TaskList struct {
 	Tasks []Task
 }
 
+/// Add task into TaskList struct
 func (tl *TaskList) addTask(description string) (int, error) {
 	num := fmt.Sprintf("%d", len(tl.Tasks)+1)
 	id, err := strconv.Atoi(num)
@@ -48,6 +49,7 @@ func (tl *TaskList) addTask(description string) (int, error) {
 	return id, nil
 }
 
+/// Show tasks
 func (tl *TaskList) showTasks(status Status) error {
 	if (len(tl.Tasks) == 0) {
 		fmt.Println("No tasks was found.")
@@ -80,6 +82,35 @@ func (tl *TaskList) showTasks(status Status) error {
 		fmt.Printf("no %s tasks was found...\n", status)
 	}
 	fmt.Println("========================================================")
+
+	return nil
+}
+
+// GetTaskByID returns the task with given ID
+func (tl *TaskList) GetTaskByID(ID int) (*Task, error) {
+	for i := range tl.Tasks {
+		if tl.Tasks[i].ID == ID {
+			return &tl.Tasks[i], nil
+		}
+	}
+
+	return nil, fmt.Errorf("task with id %d not found", ID)
+}
+
+// MarkTask return specific task by target status
+func (tl *TaskList) MarkTask(ID string, status string) (error) {
+	targetID, err := strconv.Atoi(ID)
+	if err != nil {
+		return fmt.Errorf("wrong id")
+	}
+
+	task, err := tl.GetTaskByID(targetID)
+	if err != nil {
+		return err
+	}
+
+	task.Status = Status(status)
+	task.UpdatedAt = time.Now()
 
 	return nil
 }

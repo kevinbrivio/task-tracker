@@ -76,6 +76,31 @@ func main() {
 			case "in-progress":
 				taskList.showTasks(StatusInProgress)
 			}
+
+		case "mark-in-progress":
+			targetID := description
+			if (targetID == "") {
+				fmt.Println("Please provide task ID")
+				continue
+			}
+			
+			if err := taskList.MarkTask(targetID, "in-progress"); err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Printf("Task with ID: %s successfully marked to in-progress\n", targetID)
+		case "mark-done":
+			targetID := description
+			if (targetID == "") {
+				fmt.Println("Please provide task ID")
+				continue
+			}
+			
+			if err := taskList.MarkTask(targetID, "done"); err != nil {
+				fmt.Println(err)
+				continue
+			}
+			fmt.Printf("Task with ID: %s successfully marked to done\n", targetID)
 		}
 	}
 }
