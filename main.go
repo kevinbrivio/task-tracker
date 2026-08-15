@@ -66,12 +66,15 @@ func main() {
 
 		case "list":
 			// empty description means list all tasks
-			if description == "" {
-				fmt.Println("============================")
-				for _, t := range taskList.Tasks {
-					fmt.Printf("[%d]. %s\n", t.ID, t.Description)
-				}
-				fmt.Println("============================")
+			switch description {
+			case "":
+				taskList.showTasks("")
+			case "done":
+				taskList.showTasks(StatusDone)
+			case "todo":
+				taskList.showTasks(StatusTodo)
+			case "in-progress":
+				taskList.showTasks(StatusInProgress)
 			}
 		}
 	}
